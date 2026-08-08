@@ -1,0 +1,14 @@
+.header__title {
+  text-align: center;
+  font-size: clamp(2rem, 10vw, 3rem);
+  font-weight: 900;
+}
+
+.header__connect {
+  margin-right: 0.5rem;
+  color: #d22;
+}
+
+.header__four {
+  color: #fc0;
+}
