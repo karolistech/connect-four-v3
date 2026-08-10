@@ -1,5 +1,7 @@
 import { useState } from "react";
 
+import "./Game.css";
+
 type Player = "red" | "yellow";
 type Cell = Player | null;
 type Board = Cell[][];
@@ -23,6 +25,12 @@ export default function Game() {
 
   return (
     <div className="board">
+      <div className="board__grid">
+        {game.board.map((row, rowIndex) => row.map((cell, colIndex) => (
+          <div key={`${rowIndex}-${colIndex}`} className="board__cell">
+          </div>
+        )))}
+      </div>
     </div>
   );
 }

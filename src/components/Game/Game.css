@@ -1,0 +1,14 @@
+.board__grid {
+  padding: 1.5rem;
+  display: grid;
+  grid-template-columns: repeat(7, 1fr);
+  gap: 1rem;
+  background-color: #7ab;
+  border-radius: 4px;
+}
+
+.board__cell {
+  aspect-ratio: 1 / 1;
+  border-radius: 50%;
+  background-color: #fff;
+}
