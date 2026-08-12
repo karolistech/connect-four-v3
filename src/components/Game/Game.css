@@ -15,18 +15,15 @@
 .board__btn {
   width: min(100%, 28px);
   aspect-ratio: 1 / 1;
-  display: flex;
-  justify-content: center;
-  align-items: center;
   border: 3px solid #aaa;
   border-radius: 50%;
   background: none;
 }
 
-.board__arrow {
+.board__btn-icon {
+  display: block;
   width: 100%;
   height: 100%;
-  color: #aaa;
 }
 
 .board__grid {
@@ -42,4 +39,26 @@
   aspect-ratio: 1 / 1;
   border-radius: 50%;
   background-color: #fff;
+}
+
+.board__disc {
+  width: 100%;
+  height: 100%;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  border-radius: 50%;
+}
+
+.board__disc--red {
+  background-color: #d22;
+}
+
+.board__disc--yellow {
+  background-color: #fc0;
+}
+
+.board__disc-icon {
+  width: 70%;
+  height: 70%;
 }

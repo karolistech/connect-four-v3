@@ -34,7 +34,7 @@ export default function Game() {
         {Array.from({ length: cols }, (_, colIndex) => (
           <div key={colIndex} className="board__column">
             <button className="board__btn" onClick={() => handleDropDisc(colIndex)}>
-              <svg className="board__arrow">
+              <svg className="board__btn-icon">
                 <use href={`${sprite}#arrow`} />
               </svg>
             </button>
@@ -45,6 +45,11 @@ export default function Game() {
       <div className="board__grid">
         {game.board.map((row, rowIndex) => row.map((cell, colIndex) => (
           <div key={`${rowIndex}-${colIndex}`} className="board__cell">
+            {cell !== null && (
+              <div className={getDiscClass(cell)}>
+                {getDiscIcon(cell)}
+              </div>
+            )}
           </div>
         )))}
       </div>
@@ -81,4 +86,23 @@ function dropDisc(game: Game, col: number): Game {
   }
 
   return game;
+}
+
+function getDiscClass(player: Player): string {
+  const base = "board__disc";
+  const color = `board__disc--${player}`;
+
+  return [base, color].join(" ");
+}
+
+function getDiscIcon(player: Player): React.JSX.Element {
+  return player === "red" ? (
+    <svg className="board__disc-icon">
+      <use href={`${sprite}#circle`} />
+    </svg>
+  ) : (
+    <svg className="board__disc-icon">
+      <use href={`${sprite}#star`} />
+    </svg>
+  );
 }
