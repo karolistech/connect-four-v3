@@ -88,11 +88,21 @@ function dropDisc(game: Game, col: number): Game {
       };
     }
 
-    return {
-      status: { type: "playing" },
-      board: board,
-      currentPlayer: player === "red" ? "yellow" : "red"
-    };
+    else if (boardFull(board) === true) {
+      return {
+        status: { type: "draw" },
+        board: board,
+        currentPlayer: player
+      };
+    }
+
+    else {
+      return {
+        status: { type: "playing" },
+        board: board,
+        currentPlayer: player === "red" ? "yellow" : "red"
+      };
+    }
   }
 
   return game;
@@ -118,6 +128,10 @@ function connectFour(board: Board, row: number, col: number, player: Player): bo
   }
 
   return false;
+}
+
+function boardFull(board: Board): boolean {
+  return board.every(row => row.every(cell => cell !== null));
 }
 
 function getDiscClass(player: Player): string {
