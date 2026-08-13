@@ -70,6 +70,8 @@ function createBoard(): Board {
 }
 
 function dropDisc(game: Game, col: number): Game {
+  if (game.status.type !== "playing") return game;
+
   const board = game.board.map(row => [...row]);
   const player = game.currentPlayer;
 
@@ -77,6 +79,14 @@ function dropDisc(game: Game, col: number): Game {
     if (board[row][col] !== null) continue;
 
     board[row][col] = player;
+
+    if (connectFour(board, row, col, player) === true) {
+      return {
+        status: { type: "won", winner: player },
+        board: board,
+        currentPlayer: player
+      };
+    }
 
     return {
       status: { type: "playing" },
@@ -86,6 +96,28 @@ function dropDisc(game: Game, col: number): Game {
   }
 
   return game;
+}
+
+function connectFour(board: Board, row: number, col: number, player: Player): boolean {
+  const directions = [[0, 1], [1, 0], [1, 1], [1, -1]] as const;
+
+  for (const [dr, dc] of directions) {
+    let count = 1;
+
+    for (let step = 1; step < 4; step++) {
+      if (board[row + dr * step]?.[col + dc * step] === player) count++;
+      else break;
+    }
+
+    for (let step = 1; step < 4; step++) {
+      if (board[row - dr * step]?.[col - dc * step] === player) count++;
+      else break;
+    }
+
+    if (count >= 4) return true;
+  }
+
+  return false;
 }
 
 function getDiscClass(player: Player): string {
