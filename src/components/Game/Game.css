@@ -1,8 +1,19 @@
 .board__controls {
   padding: 0.5rem 1.5rem;
   display: grid;
-  grid-template-columns: repeat(7, 1fr);
   gap: 1rem;
+}
+
+.board__controls--7x6 {
+  grid-template-columns: repeat(7, 1fr);
+}
+
+.board__controls--8x7 {
+  grid-template-columns: repeat(8, 1fr);
+}
+
+.board__controls--9x8 {
+  grid-template-columns: repeat(9, 1fr);
 }
 
 .board__column {
@@ -29,10 +40,21 @@
 .board__grid {
   padding: 1.5rem;
   display: grid;
-  grid-template-columns: repeat(7, 1fr);
   gap: 1rem;
   background-color: #7ab;
   border-radius: 4px;
+}
+
+.board__grid--7x6 {
+  grid-template-columns: repeat(7, 1fr);
+}
+
+.board__grid--8x7 {
+  grid-template-columns: repeat(8, 1fr);
+}
+
+.board__grid--9x8 {
+  grid-template-columns: repeat(9, 1fr);
 }
 
 .board__cell {
