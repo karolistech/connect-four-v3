@@ -1,3 +1,11 @@
+:root {
+  --shadow-board-outer: 2px 4px 6px rgba(83, 86, 90, 0.3);
+  --shadow-board-inner: 4px 4px 4px rgba(157, 190, 205, 0.8) inset;
+  --shadow-light: 2px 2px 2px rgba(174, 201, 214, 0.5);
+  --shadow-dark: -2px -2px 2px rgba(79, 131, 156, 0.5);
+  --shadow-inner: 2px 2px 2px rgba(83, 86, 90, 0.4) inset;
+}
+
 *, *::before, *::after {
   box-sizing: border-box;
   margin: 0;

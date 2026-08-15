@@ -36,22 +36,26 @@ export default function Game() {
     setGame(game => dropDisc(game, col));
   }
 
+  function handleModeChange(mode: Mode) {
+    setGame(createGame(mode));
+  }
+
   return (
     <div className="board">
       <div className="board__modes">
-        <button onClick={() => setGame(createGame(game.mode))}>
+        <button className="board__mode-button" onClick={() => handleModeChange(game.mode)}>
           New Game
         </button>
 
-        <button onClick={() => setGame(createGame("7x6"))}>
+        <button className={getModeButtonClass("7x6", game.mode)} onClick={() => handleModeChange("7x6")}>
           7 x 6
         </button>
 
-        <button onClick={() => setGame(createGame("8x7"))}>
+        <button className={getModeButtonClass("8x7", game.mode)} onClick={() => handleModeChange("8x7")}>
           8 x 7
         </button>
 
-        <button onClick={() => setGame(createGame("9x8"))}>
+        <button className={getModeButtonClass("9x8", game.mode)} onClick={() => handleModeChange("9x8")}>
           9 x 8
         </button>
       </div>
@@ -169,6 +173,13 @@ function connectFour(board: Board, row: number, col: number, player: Player): bo
 
 function boardFull(board: Board): boolean {
   return board.every(row => row.every(cell => cell !== null));
+}
+
+function getModeButtonClass(mode: Mode, currentMode: Mode): string {
+  const base = "board__mode-button";
+  const active = mode === currentMode && "board__mode-button--active";
+
+  return [base, active].filter(Boolean).join(" ");
 }
 
 function getPreviewDiscClass(player: Player): string {
