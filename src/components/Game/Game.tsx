@@ -32,20 +32,14 @@ const boardSizes: Record<Mode, BoardSize> = {
 export default function Game() {
   const [game, setGame] = useState<Game>(() => createGame("7x6"));
 
-  const boardSize = boardSizes[game.mode];
-
   function handleDropDisc(col: number) {
     setGame(game => dropDisc(game, col));
-  }
-
-  function newGame() {
-    setGame(createGame(game.mode));
   }
 
   return (
     <div className="board">
       <div className="board__modes">
-        <button onClick={newGame}>
+        <button onClick={() => setGame(createGame(game.mode))}>
           New Game
         </button>
 
@@ -63,10 +57,10 @@ export default function Game() {
       </div>
 
       <div className={`board__controls board__controls--${game.mode}`}>
-        {Array.from({ length: boardSize.cols }, (_, colIndex) => (
+        {Array.from({ length: boardSizes[game.mode].cols }, (_, colIndex) => (
           <div key={colIndex} className="board__column">
             <button className="board__btn" onClick={() => handleDropDisc(colIndex)}>
-              <svg className="board__btn-icon">
+              <svg className="board__arrow-icon">
                 <use href={`${sprite}#arrow`} />
               </svg>
             </button>
@@ -105,45 +99,42 @@ function createBoard(boardSize: BoardSize): Board {
 function dropDisc(game: Game, col: number): Game {
   if (game.status.type !== "playing") return game;
 
+  const row = game.board.findLastIndex(row => row[col] === null);
+
+  if (row === -1) return game;
+
   const mode = game.mode;
-  const boardSize = boardSizes[game.mode];
   const board = game.board.map(row => [...row]);
   const player = game.currentPlayer;
 
-  for (let row = boardSize.rows - 1; row >= 0; row--) {
-    if (board[row][col] !== null) continue;
+  board[row][col] = player;
 
-    board[row][col] = player;
-
-    if (connectFour(board, row, col, player) === true) {
-      return {
-        mode: mode,
-        status: { type: "won", winner: player },
-        board: board,
-        currentPlayer: player
-      };
-    }
-
-    else if (boardFull(board) === true) {
-      return {
-        mode: mode,
-        status: { type: "draw" },
-        board: board,
-        currentPlayer: player
-      };
-    }
-
-    else {
-      return {
-        mode: mode,
-        status: { type: "playing" },
-        board: board,
-        currentPlayer: player === "red" ? "yellow" : "red"
-      };
-    }
+  if (connectFour(board, row, col, player) === true) {
+    return {
+      mode: mode,
+      status: { type: "won", winner: player },
+      board: board,
+      currentPlayer: player
+    };
   }
 
-  return game;
+  else if (boardFull(board) === true) {
+    return {
+      mode: mode,
+      status: { type: "draw" },
+      board: board,
+      currentPlayer: player
+    };
+  }
+
+  else {
+    return {
+      mode: mode,
+      status: { type: "playing" },
+      board: board,
+      currentPlayer: player === "red" ? "yellow" : "red"
+    };
+  }
 }
 
 function connectFour(board: Board, row: number, col: number, player: Player): boolean {
@@ -180,13 +171,11 @@ function getDiscClass(player: Player): string {
 }
 
 function getDiscIcon(player: Player): React.JSX.Element {
-  return player === "red" ? (
+  const iconId = player === "red" ? "circle" : "star";
+
+  return (
     <svg className="board__disc-icon">
-      <use href={`${sprite}#circle`} />
-    </svg>
-  ) : (
-    <svg className="board__disc-icon">
-      <use href={`${sprite}#star`} />
+      <use href={`${sprite}#${iconId}`} />
     </svg>
   );
 }
