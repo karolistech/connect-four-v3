@@ -1,5 +1,6 @@
 .app {
-  max-width: 500px;
+  position: relative;
+  max-width: 550px;
   margin-inline: auto;
   padding-inline: 0.25rem;
   display: flex;

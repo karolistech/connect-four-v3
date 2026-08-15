@@ -1,18 +1,35 @@
-.board__modes {
+.board__controls {
   display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 1rem;
+  margin-bottom: 1rem;
+}
+
+.board__sizes {
+  display: flex;
+  align-items: center;
   gap: 0.5rem;
 }
 
-.board__mode-button {
+.board__size-button,
+.board__new-game-button,
+.board__rules-button {
   padding: 0.5rem 1rem;
   border: 1px solid #7ab;
   border-radius: 4px;
   background-color: #fff;
+  font-size: 1rem;
 }
 
-.board__mode-button--active {
+.board__size-button--active {
   background-color: #7ab;
   color: #fff;
+}
+
+.board__actions {
+  display: flex;
+  gap: 0.5rem;
 }
 
 .board__columns {
@@ -142,6 +159,13 @@
 
   to {
     transform: translateY(0);
+  }
+}
+
+@media (min-width: 550px) {
+  .board__controls {
+    flex-direction: row;
+    justify-content: space-between;
   }
 }
 

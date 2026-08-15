@@ -7,7 +7,7 @@ type Player = "red" | "yellow";
 type Cell = Player | null;
 type Board = Cell[][];
 
-type Mode = "7x6" | "8x7" | "9x8";
+type BoardSize = "7x6" | "8x7" | "9x8";
 
 type Status =
   | { type: "playing" }
@@ -15,15 +15,15 @@ type Status =
   | { type: "draw" };
 
 type Game = {
-  mode: Mode;
+  boardSize: BoardSize;
   status: Status;
   board: Board;
   currentPlayer: Player;
 };
 
-type BoardSize = { cols: number; rows: number };
+type Dimensions = { cols: number; rows: number };
 
-const boardSizes: Record<Mode, BoardSize> = {
+const boardSizes: Record<BoardSize, Dimensions> = {
   "7x6": { cols: 7, rows: 6 },
   "8x7": { cols: 8, rows: 7 },
   "9x8": { cols: 9, rows: 8 }
@@ -36,32 +36,44 @@ export default function Game() {
     setGame(game => dropDisc(game, col));
   }
 
-  function handleModeChange(mode: Mode) {
-    setGame(createGame(mode));
+  function changeBoardSize(boardSize: BoardSize) {
+    setGame(createGame(boardSize));
+  }
+
+  function newGame() {
+    setGame(createGame(game.boardSize));
   }
 
   return (
     <div className="board">
-      <div className="board__modes">
-        <button className="board__mode-button" onClick={() => handleModeChange(game.mode)}>
-          New Game
-        </button>
+      <div className="board__controls">
+        <div className="board__sizes">
+          <span className="board__size-label">Board Size:</span>
 
-        <button className={getModeButtonClass("7x6", game.mode)} onClick={() => handleModeChange("7x6")}>
-          7 x 6
-        </button>
+          <button className={getBoardSizeButtonClass("7x6", game.boardSize)} onClick={() => changeBoardSize("7x6")}>
+            7 x 6
+          </button>
 
-        <button className={getModeButtonClass("8x7", game.mode)} onClick={() => handleModeChange("8x7")}>
-          8 x 7
-        </button>
+          <button className={getBoardSizeButtonClass("8x7", game.boardSize)} onClick={() => changeBoardSize("8x7")}>
+            8 x 7
+          </button>
 
-        <button className={getModeButtonClass("9x8", game.mode)} onClick={() => handleModeChange("9x8")}>
-          9 x 8
-        </button>
+          <button className={getBoardSizeButtonClass("9x8", game.boardSize)} onClick={() => changeBoardSize("9x8")}>
+            9 x 8
+          </button>
+        </div>
+
+        <div className="board__actions">
+          <button className="board__new-game-button" onClick={newGame}>
+            New Game
+          </button>
+
+          <button className="board__rules-button">Rules</button>
+        </div>
       </div>
 
-      <div className={`board__columns board__columns--${game.mode}`}>
-        {Array.from({ length: boardSizes[game.mode].cols }, (_, colIndex) => (
+      <div className={`board__columns board__columns--${game.boardSize}`}>
+        {Array.from({ length: boardSizes[game.boardSize].cols }, (_, colIndex) => (
           <div key={colIndex} className="board__column">
             <button className="board__drop-button" onClick={() => handleDropDisc(colIndex)}>
               <svg className="board__arrow-icon">
@@ -80,7 +92,7 @@ export default function Game() {
         ))}
       </div>
 
-      <div className={`board__grid board__grid--${game.mode}`}>
+      <div className={`board__grid board__grid--${game.boardSize}`}>
         {game.board.map((row, rowIndex) => row.map((cell, colIndex) => (
           <div key={`${rowIndex}-${colIndex}`} className="board__cell">
             {cell !== null && (
@@ -95,17 +107,17 @@ export default function Game() {
   );
 }
 
-function createGame(mode: Mode): Game {
+function createGame(boardSize: BoardSize): Game {
   return {
-    mode: mode,
+    boardSize: boardSize,
     status: { type: "playing" },
-    board: createBoard(boardSizes[mode]),
+    board: createBoard(boardSizes[boardSize]),
     currentPlayer: "red"
   };
 }
 
-function createBoard(boardSize: BoardSize): Board {
-  return Array.from({ length: boardSize.rows }, () => Array(boardSize.cols).fill(null));
+function createBoard(dimensions: Dimensions): Board {
+  return Array.from({ length: dimensions.rows }, () => Array(dimensions.cols).fill(null));
 }
 
 function dropDisc(game: Game, col: number): Game {
@@ -115,7 +127,7 @@ function dropDisc(game: Game, col: number): Game {
 
   if (row === -1) return game;
 
-  const mode = game.mode;
+  const boardSize = game.boardSize;
   const board = game.board.map(row => [...row]);
   const player = game.currentPlayer;
 
@@ -123,7 +135,7 @@ function dropDisc(game: Game, col: number): Game {
 
   if (connectFour(board, row, col, player) === true) {
     return {
-      mode: mode,
+      boardSize: boardSize,
       status: { type: "won", winner: player },
       board: board,
       currentPlayer: player
@@ -132,7 +144,7 @@ function dropDisc(game: Game, col: number): Game {
 
   else if (boardFull(board) === true) {
     return {
-      mode: mode,
+      boardSize: boardSize,
       status: { type: "draw" },
       board: board,
       currentPlayer: player
@@ -141,7 +153,7 @@ function dropDisc(game: Game, col: number): Game {
 
   else {
     return {
-      mode: mode,
+      boardSize: boardSize,
       status: { type: "playing" },
       board: board,
       currentPlayer: player === "red" ? "yellow" : "red"
@@ -175,9 +187,9 @@ function boardFull(board: Board): boolean {
   return board.every(row => row.every(cell => cell !== null));
 }
 
-function getModeButtonClass(mode: Mode, currentMode: Mode): string {
-  const base = "board__mode-button";
-  const active = mode === currentMode && "board__mode-button--active";
+function getBoardSizeButtonClass(boardSize: BoardSize, currentBoardSize: BoardSize): string {
+  const base = "board__size-button";
+  const active = boardSize === currentBoardSize && "board__size-button--active";
 
   return [base, active].filter(Boolean).join(" ");
 }
