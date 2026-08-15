@@ -1,29 +1,30 @@
-.board__controls {
+.board__columns {
   padding: 0.5rem 1.5rem;
   display: grid;
   gap: 1rem;
 }
 
-.board__controls--7x6 {
+.board__columns--7x6 {
   grid-template-columns: repeat(7, 1fr);
 }
 
-.board__controls--8x7 {
+.board__columns--8x7 {
   grid-template-columns: repeat(8, 1fr);
 }
 
-.board__controls--9x8 {
+.board__columns--9x8 {
   grid-template-columns: repeat(9, 1fr);
 }
 
 .board__column {
+  position: relative;
   aspect-ratio: 1 / 1;
   display: flex;
   justify-content: center;
   align-items: flex-end;
 }
 
-.board__btn {
+.board__drop-button {
   width: min(100%, 28px);
   aspect-ratio: 1 / 1;
   border: 3px solid #aaa;
@@ -72,6 +73,15 @@
   border-radius: 50%;
 }
 
+.board__disc--preview {
+  position: absolute;
+  width: 100%;
+  height: 100%;
+  transform: translateY(5px);
+  display: none;
+  pointer-events: none;
+}
+
 .board__disc--red {
   background-color: #d22;
 }
@@ -80,7 +90,18 @@
   background-color: #fc0;
 }
 
+.board__disc--faded {
+  filter: opacity(70%) grayscale(60%) contrast(40%);
+}
+
 .board__disc-icon {
   width: 70%;
   height: 70%;
+}
+
+@media (hover: hover) and (pointer: fine) {
+  .board__drop-button:hover + .board__disc--preview,
+  .board__drop-button:focus-visible + .board__disc--preview {
+    display: block;
+  }
 }

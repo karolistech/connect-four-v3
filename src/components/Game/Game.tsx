@@ -56,14 +56,22 @@ export default function Game() {
         </button>
       </div>
 
-      <div className={`board__controls board__controls--${game.mode}`}>
+      <div className={`board__columns board__columns--${game.mode}`}>
         {Array.from({ length: boardSizes[game.mode].cols }, (_, colIndex) => (
           <div key={colIndex} className="board__column">
-            <button className="board__btn" onClick={() => handleDropDisc(colIndex)}>
+            <button className="board__drop-button" onClick={() => handleDropDisc(colIndex)}>
               <svg className="board__arrow-icon">
                 <use href={`${sprite}#arrow`} />
               </svg>
             </button>
+
+            {game.status.type === "playing" && (
+              <div className="board__disc--preview">
+                <div className={getPreviewDiscClass(game.currentPlayer)}>
+                  {getDiscIcon(game.currentPlayer)}
+                </div>
+              </div>
+            )}
           </div>
         ))}
       </div>
@@ -72,7 +80,7 @@ export default function Game() {
         {game.board.map((row, rowIndex) => row.map((cell, colIndex) => (
           <div key={`${rowIndex}-${colIndex}`} className="board__cell">
             {cell !== null && (
-              <div className={getDiscClass(cell)}>
+              <div className={getBoardDiscClass(cell, game.status)}>
                 {getDiscIcon(cell)}
               </div>
             )}
@@ -163,11 +171,16 @@ function boardFull(board: Board): boolean {
   return board.every(row => row.every(cell => cell !== null));
 }
 
-function getDiscClass(player: Player): string {
+function getPreviewDiscClass(player: Player): string {
+  return `board__disc board__disc--${player}`;
+}
+
+function getBoardDiscClass(player: Player, status: Status): string {
   const base = "board__disc";
   const color = `board__disc--${player}`;
+  const faded = (status.type === "won" && status.winner !== player) && "board__disc--faded";
 
-  return [base, color].join(" ");
+  return [base, color, faded].filter(Boolean).join(" ");
 }
 
 function getDiscIcon(player: Player): React.JSX.Element {
