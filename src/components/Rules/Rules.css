@@ -1,3 +1,10 @@
+.rules__backdrop {
+  position: fixed;
+  inset: 0;
+  background-color: rgba(0, 0, 0, 0.6);
+  z-index: 1;
+}
+
 .rules__modal {
   position: absolute;
   width: min(95%, 400px);
@@ -5,5 +12,49 @@
   left: 50%;
   transform: translate(-50%, -50%);
   padding: 1rem;
+  z-index: 2;
+  border-radius: 4px;
   background-color: #eee;
+}
+
+.rules__title {
+  margin-bottom: 1rem;
+  text-align: center;
+  text-transform: uppercase;
+  font-weight: 900;
+}
+
+.rules__section {
+  margin-bottom: 0.75rem;
+}
+
+.rules__section-title {
+  margin-bottom: 0.25rem;
+  text-transform: uppercase;
+  color: #7ab;
+  font-weight: 900;
+}
+
+.rules__description {
+  line-height: 1.5;
+}
+
+.rules__list {
+  list-style-position: inside;
+  line-height: 1.5;
+}
+
+.rules__close-btn {
+  position: absolute;
+  width: 36px;
+  height: 36px;
+  left: 50%;
+  transform: translate(-50%, -10%);
+  border: none;
+  background: none;
+}
+
+.rules__checkmark-icon {
+  width: 100%;
+  height: 100%;
 }

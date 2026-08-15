@@ -1,6 +1,7 @@
 import { useState } from "react";
 
 import "./Rules.css";
+import sprite from "../../assets/icons/sprite.svg?no-inline";
 
 export default function Rules() {
   const [rulesOpen, setRulesOpen] = useState(false);
@@ -21,6 +22,8 @@ export default function Rules() {
 
       {rulesOpen === true && (
         <>
+          <div className="rules__backdrop" />
+
           <div className="rules__modal">
             <h2 className="rules__title">Rules</h2>
 
@@ -45,7 +48,9 @@ export default function Rules() {
             </div>
 
             <button className="rules__close-btn" onClick={closeRules}>
-              Got it!
+              <svg className="rules__checkmark-icon">
+                <use href={`${sprite}#checkmark`} />
+              </svg>
             </button>
           </div>
         </>
