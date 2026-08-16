@@ -1,4 +1,4 @@
-.board__controls {
+.panel {
   display: flex;
   flex-direction: column;
   align-items: center;
@@ -6,15 +6,13 @@
   margin-bottom: 1rem;
 }
 
-.board__sizes {
+.panel__board-sizes {
   display: flex;
   align-items: center;
   gap: 0.5rem;
 }
 
-.board__size-button,
-.board__new-game-button,
-.board__rules-button {
+.panel__button {
   padding: 0.5rem 1rem;
   border: 1px solid #7ab;
   border-radius: 4px;
@@ -22,12 +20,12 @@
   font-size: 1rem;
 }
 
-.board__size-button--active {
+.panel__button--active {
   background-color: #7ab;
   color: #fff;
 }
 
-.board__actions {
+.panel__actions {
   display: flex;
   gap: 0.5rem;
 }
@@ -163,7 +161,7 @@
 }
 
 @media (min-width: 550px) {
-  .board__controls {
+  .panel {
     flex-direction: row;
     justify-content: space-between;
   }

@@ -1,5 +1,7 @@
 import { useState } from "react";
 
+import Rules from "./Rules/Rules";
+
 import "./Game.css";
 import sprite from "../../assets/icons/sprite.svg?no-inline";
 
@@ -11,7 +13,7 @@ type BoardSize = "7x6" | "8x7" | "9x8";
 
 type Status =
   | { type: "playing" }
-  | { type: "won", winner: Player }
+  | { type: "win", winner: Player }
   | { type: "draw" };
 
 type Game = {
@@ -31,9 +33,12 @@ const boardSizes: Record<BoardSize, Dimensions> = {
 
 export default function Game() {
   const [game, setGame] = useState<Game>(() => createGame("7x6"));
+  const [rulesOpen, setRulesOpen] = useState(false);
 
-  function handleDropDisc(col: number) {
-    setGame(game => dropDisc(game, col));
+  const { boardSize, status, board, currentPlayer } = game;
+
+  function dropDisc(col: number) {
+    setGame(game => updateGame(game, col));
   }
 
   function changeBoardSize(boardSize: BoardSize) {
@@ -41,67 +46,81 @@ export default function Game() {
   }
 
   function newGame() {
-    setGame(createGame(game.boardSize));
+    setGame(createGame(boardSize));
+  }
+
+  function openRules() {
+    setRulesOpen(true);
+  }
+
+  function closeRules() {
+    setRulesOpen(false);
   }
 
   return (
-    <div className="board">
-      <div className="board__controls">
-        <div className="board__sizes">
-          <span className="board__size-label">Board Size:</span>
+    <div className="game">
+      <div className="panel">
+        <div className="panel__board-sizes">
+          <span>Board Size:</span>
 
-          <button className={getBoardSizeButtonClass("7x6", game.boardSize)} onClick={() => changeBoardSize("7x6")}>
+          <button className={getPanelButtonClass("7x6", boardSize)} onClick={() => changeBoardSize("7x6")}>
             7 x 6
           </button>
 
-          <button className={getBoardSizeButtonClass("8x7", game.boardSize)} onClick={() => changeBoardSize("8x7")}>
+          <button className={getPanelButtonClass("8x7", boardSize)} onClick={() => changeBoardSize("8x7")}>
             8 x 7
           </button>
 
-          <button className={getBoardSizeButtonClass("9x8", game.boardSize)} onClick={() => changeBoardSize("9x8")}>
+          <button className={getPanelButtonClass("9x8", boardSize)} onClick={() => changeBoardSize("9x8")}>
             9 x 8
           </button>
         </div>
 
-        <div className="board__actions">
-          <button className="board__new-game-button" onClick={newGame}>
+        <div className="panel__actions">
+          <button className="panel__button" onClick={newGame}>
             New Game
           </button>
 
-          <button className="board__rules-button">Rules</button>
+          <button className="panel__button" onClick={openRules}>
+            Rules
+          </button>
         </div>
       </div>
 
-      <div className={`board__columns board__columns--${game.boardSize}`}>
-        {Array.from({ length: boardSizes[game.boardSize].cols }, (_, colIndex) => (
-          <div key={colIndex} className="board__column">
-            <button className="board__drop-button" onClick={() => handleDropDisc(colIndex)}>
-              <svg className="board__arrow-icon">
-                <use href={`${sprite}#arrow`} />
-              </svg>
-            </button>
+      {rulesOpen === true && <Rules closeRules={closeRules} />}
 
-            {game.status.type === "playing" && (
-              <div className="board__disc--preview">
-                <div className={getPreviewDiscClass(game.currentPlayer)}>
-                  {getDiscIcon(game.currentPlayer)}
+      <div className="board">
+        <div className={`board__columns board__columns--${boardSize}`}>
+          {Array.from({ length: boardSizes[boardSize].cols }, (_, colIndex) => (
+            <div key={colIndex} className="board__column">
+              <button className="board__drop-button" onClick={() => dropDisc(colIndex)}>
+                <svg className="board__arrow-icon">
+                  <use href={`${sprite}#arrow`} />
+                </svg>
+              </button>
+
+              {status.type === "playing" && (
+                <div className="board__disc--preview">
+                  <div className={getPreviewDiscClass(currentPlayer)}>
+                    {getDiscIcon(currentPlayer)}
+                  </div>
                 </div>
-              </div>
-            )}
-          </div>
-        ))}
-      </div>
+              )}
+            </div>
+          ))}
+        </div>
 
-      <div className={`board__grid board__grid--${game.boardSize}`}>
-        {game.board.map((row, rowIndex) => row.map((cell, colIndex) => (
-          <div key={`${rowIndex}-${colIndex}`} className="board__cell">
-            {cell !== null && (
-              <div className={getBoardDiscClass(cell, game.status)}>
-                {getDiscIcon(cell)}
-              </div>
-            )}
-          </div>
-        )))}
+        <div className={`board__grid board__grid--${boardSize}`}>
+          {board.map((row, rowIndex) => row.map((cell, colIndex) => (
+            <div key={`${rowIndex}-${colIndex}`} className="board__cell">
+              {cell !== null && (
+                <div className={getBoardDiscClass(cell, status)}>
+                  {getDiscIcon(cell)}
+                </div>
+              )}
+            </div>
+          )))}
+        </div>
       </div>
     </div>
   );
@@ -120,7 +139,7 @@ function createBoard(dimensions: Dimensions): Board {
   return Array.from({ length: dimensions.rows }, () => Array(dimensions.cols).fill(null));
 }
 
-function dropDisc(game: Game, col: number): Game {
+function updateGame(game: Game, col: number): Game {
   if (game.status.type !== "playing") return game;
 
   const row = game.board.findLastIndex(row => row[col] === null);
@@ -136,7 +155,7 @@ function dropDisc(game: Game, col: number): Game {
   if (connectFour(board, row, col, player) === true) {
     return {
       boardSize: boardSize,
-      status: { type: "won", winner: player },
+      status: { type: "win", winner: player },
       board: board,
       currentPlayer: player
     };
@@ -187,9 +206,9 @@ function boardFull(board: Board): boolean {
   return board.every(row => row.every(cell => cell !== null));
 }
 
-function getBoardSizeButtonClass(boardSize: BoardSize, currentBoardSize: BoardSize): string {
-  const base = "board__size-button";
-  const active = boardSize === currentBoardSize && "board__size-button--active";
+function getPanelButtonClass(boardSize: BoardSize, currentBoardSize: BoardSize): string {
+  const base = "panel__button";
+  const active = boardSize === currentBoardSize && "panel__button--active";
 
   return [base, active].filter(Boolean).join(" ");
 }
@@ -201,7 +220,7 @@ function getPreviewDiscClass(player: Player): string {
 function getBoardDiscClass(player: Player, status: Status): string {
   const base = "board__disc";
   const color = `board__disc--${player}`;
-  const faded = (status.type === "won" && status.winner !== player) && "board__disc--faded";
+  const faded = (status.type === "win" && status.winner !== player) && "board__disc--faded";
 
   return [base, color, faded].filter(Boolean).join(" ");
 }
