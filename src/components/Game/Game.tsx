@@ -3,7 +3,7 @@ import { useState } from "react";
 import Rules from "./Rules/Rules";
 
 import "./Game.css";
-import sprite from "../../assets/icons/sprite.svg?no-inline";
+import sprite from "@/assets/icons/sprite.svg";
 
 type Player = "red" | "yellow";
 type Cell = Player | null;

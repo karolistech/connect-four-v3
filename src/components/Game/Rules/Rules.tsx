@@ -1,5 +1,5 @@
 import "./Rules.css";
-import sprite from "../../../assets/icons/sprite.svg?no-inline";
+import sprite from "@/assets/icons/sprite.svg";
 
 type RulesProps = {
   closeRules: () => void;
