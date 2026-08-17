@@ -208,9 +208,9 @@ function boardFull(board: Board): boolean {
 
 function getPanelButtonClass(boardSize: BoardSize, currentBoardSize: BoardSize): string {
   const base = "panel__button";
-  const active = boardSize === currentBoardSize && "panel__button--active";
+  const selected = boardSize === currentBoardSize && "panel__button--selected";
 
-  return [base, active].filter(Boolean).join(" ");
+  return [base, selected].filter(Boolean).join(" ");
 }
 
 function getPreviewDiscClass(player: Player): string {

@@ -17,10 +17,11 @@
   border: 1px solid #7ab;
   border-radius: 4px;
   background-color: #fff;
+  -webkit-tap-highlight-color: transparent;
   font-size: 1rem;
 }
 
-.panel__button--active {
+.panel__button--selected {
   background-color: #7ab;
   color: #fff;
 }
@@ -168,6 +169,15 @@
 }
 
 @media (hover: hover) and (pointer: fine) {
+  .panel__button:hover {
+    background-color: #7ab;
+    color: #fff;
+  }
+
+  .panel__button:active {
+    filter: brightness(0.95);
+  }
+
   .board__drop-button:hover + .board__disc--preview,
   .board__drop-button:focus-visible + .board__disc--preview {
     display: block;
