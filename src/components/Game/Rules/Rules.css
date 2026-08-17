@@ -52,6 +52,7 @@
   transform: translate(-50%, -10%);
   border: none;
   background: none;
+  -webkit-tap-highlight-color: transparent;
 }
 
 .rules__checkmark-icon {
