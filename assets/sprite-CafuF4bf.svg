@@ -1,0 +1,18 @@
+<svg xmlns="http://www.w3.org/2000/svg">
+  <symbol id="arrow" viewBox="0 0 24 24" fill="#aaa">
+    <path d="M5 8 L19 8 L12 18 Z" />
+  </symbol>
+
+  <symbol id="circle" viewBox="0 0 24 24" fill="#d22" stroke="#444" stroke-width="1.5">
+    <circle cx="12" cy="12" r="10" />
+  </symbol>
+
+  <symbol id="star" viewBox="0 0 24 24" fill="#fc0" stroke="#444" stroke-linejoin="round" stroke-width="1.5">
+    <path d="M12 17.3L18.2 21l-1.6-7L22 9.2l-7.2-.6L12 2 9.2 8.6 2 9.2l5.5 4.7L5.8 21 Z" />
+  </symbol>
+
+  <symbol id="checkmark" viewBox="0 0 24 24" fill="#7ab">
+    <circle cx="12" cy="12" r="11.5" />
+    <path d="M7 12 L11 16 L17 8 L11 16 Z" stroke="#fff" stroke-width="1.5" />
+  </symbol>
+</svg>
