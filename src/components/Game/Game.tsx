@@ -110,7 +110,7 @@ export default function Game() {
           ))}
         </div>
 
-        <div className={`board__grid board__grid--${boardSize}`}>
+        <div key={boardSize} className={`board__grid board__grid--${boardSize}`}>
           {board.map((row, rowIndex) => row.map((cell, colIndex) => (
             <div key={`${rowIndex}-${colIndex}`} className="board__cell">
               {cell !== null && (
