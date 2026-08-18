@@ -110,9 +110,9 @@ export default function Game() {
           ))}
         </div>
 
-        <div key={boardSize} className={`board__grid board__grid--${boardSize}`}>
-          {board.map((row, rowIndex) => row.map((cell, colIndex) => (
-            <div key={`${rowIndex}-${colIndex}`} className="board__cell">
+        <div className={`board__grid board__grid--${boardSize}`}>
+          {board.flatMap((row, rowIndex) => row.map((cell, colIndex) => (
+            <div key={`${rowIndex}-${colIndex}-${boardSize}`} className="board__cell">
               {cell !== null && (
                 <div className={getBoardDiscClass(cell, status)}>
                   {getDiscIcon(cell)}

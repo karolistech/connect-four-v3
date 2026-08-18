@@ -84,20 +84,14 @@
 
 .board__grid--7x6 {
   grid-template-columns: repeat(7, 1fr);
-  grid-template-rows: repeat(6, 1fr);
-  /* grid-template-columns: repeat(7, minmax(0, 1fr)); */
 }
 
 .board__grid--8x7 {
   grid-template-columns: repeat(8, 1fr);
-  grid-template-rows: repeat(7, 1fr);
-  /* grid-template-columns: repeat(8, minmax(0, 1fr)); */
 }
 
 .board__grid--9x8 {
   grid-template-columns: repeat(9, 1fr);
-  grid-template-rows: repeat(8, 1fr);
-  /* grid-template-columns: repeat(9, minmax(0, 1fr)); */
 }
 
 .board__cell {
