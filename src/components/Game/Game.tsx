@@ -12,15 +12,14 @@ type Board = Cell[][];
 type BoardSize = "7x6" | "8x7" | "9x8";
 
 type Status =
-  | { type: "playing" }
-  | { type: "win", winner: Player }
+  | { type: "playing"; currentPlayer: Player }
+  | { type: "win"; winner: Player }
   | { type: "draw" };
 
 type Game = {
   boardSize: BoardSize;
   status: Status;
   board: Board;
-  currentPlayer: Player;
 };
 
 type Dimensions = { cols: number; rows: number };
@@ -35,7 +34,7 @@ export default function Game() {
   const [game, setGame] = useState<Game>(() => createGame("7x6"));
   const [rulesOpen, setRulesOpen] = useState(false);
 
-  const { boardSize, status, board, currentPlayer } = game;
+  const { boardSize, status, board } = game;
 
   function dropDisc(col: number) {
     setGame(game => updateGame(game, col));
@@ -101,8 +100,8 @@ export default function Game() {
 
               {status.type === "playing" && (
                 <div className="board__disc--preview">
-                  <div className={getPreviewDiscClass(currentPlayer)}>
-                    {getDiscIcon(currentPlayer)}
+                  <div className={getPreviewDiscClass(status.currentPlayer)}>
+                    {getDiscIcon(status.currentPlayer)}
                   </div>
                 </div>
               )}
@@ -111,8 +110,8 @@ export default function Game() {
         </div>
 
         <div className={`board__grid board__grid--${boardSize}`}>
-          {board.flatMap((row, rowIndex) => row.map((cell, colIndex) => (
-            <div key={`${rowIndex}-${colIndex}-${boardSize}`} className="board__cell">
+          {board.map((row, rowIndex) => row.map((cell, colIndex) => (
+            <div key={`${rowIndex}-${colIndex}`} className="board__cell">
               {cell !== null && (
                 <div className={getBoardDiscClass(cell, status)}>
                   {getDiscIcon(cell)}
@@ -129,14 +128,15 @@ export default function Game() {
 function createGame(boardSize: BoardSize): Game {
   return {
     boardSize: boardSize,
-    status: { type: "playing" },
-    board: createBoard(boardSizes[boardSize]),
-    currentPlayer: "red"
+    status: { type: "playing", currentPlayer: "red" },
+    board: createBoard(boardSize)
   };
 }
 
-function createBoard(dimensions: Dimensions): Board {
-  return Array.from({ length: dimensions.rows }, () => Array(dimensions.cols).fill(null));
+function createBoard(boardSize: BoardSize): Board {
+  const { cols, rows } = boardSizes[boardSize];
+
+  return Array.from({ length: rows }, () => Array(cols).fill(null));
 }
 
 function updateGame(game: Game, col: number): Game {
@@ -148,7 +148,7 @@ function updateGame(game: Game, col: number): Game {
 
   const boardSize = game.boardSize;
   const board = game.board.map(row => [...row]);
-  const player = game.currentPlayer;
+  const player = game.status.currentPlayer;
 
   board[row][col] = player;
 
@@ -156,8 +156,7 @@ function updateGame(game: Game, col: number): Game {
     return {
       boardSize: boardSize,
       status: { type: "win", winner: player },
-      board: board,
-      currentPlayer: player
+      board: board
     };
   }
 
@@ -165,17 +164,15 @@ function updateGame(game: Game, col: number): Game {
     return {
       boardSize: boardSize,
       status: { type: "draw" },
-      board: board,
-      currentPlayer: player
+      board: board
     };
   }
 
   else {
     return {
       boardSize: boardSize,
-      status: { type: "playing" },
-      board: board,
-      currentPlayer: player === "red" ? "yellow" : "red"
+      status: { type: "playing", currentPlayer: player === "red" ? "yellow" : "red" },
+      board: board
     };
   }
 }
